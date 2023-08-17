@@ -23,26 +23,31 @@ python3 -V
 python3 -m venv .venv
 `````
 
-3. Allow executable permissions to the current user
-````bash
-chmod -R +rwx .
-````
-
-4. Activate virtual environment and install required pip dependencies
+3. Activate virtual environment
 `````bash
-./start_dev.sh
+source ./.venv/bin/activate
 `````
+
+4. Install required pip dependencies
+
+````bash
+pip install -r requirements.txt
+````
 
 5. Init your psql server
    
-6. Create a new .env file with the variables in .env.example
-   
-7. Code like your life depends on it
+6. Code like your life depends on it
 
 # Dev process: 
-1. Run `./start_dev.sh` to:
-   1. Activate virtual environment
-   2. Install/update dependencies if necessary
+
+1. Activate virtual environment
+`````bash
+source ./.venv/bin/activate
+`````
+2. Install/update dependencies if necessary
+`````bash
+pip install -r requirements.txt
+`````
 2. Code
 
 
@@ -55,5 +60,11 @@ chmod -R +rwx .
 
 
 # New dependencies
-1. Run `./install.sh NAME_OF_YOUR_DEPENDENCY` to save the new dependency into the requirements file. EG: `./install.sh ipython`
-   - You can also run `pip install NAME_OF_YOUR_DEPENDENCY` and then run `./freeze.sh`
+1. Install your dependency 
+````bash
+pip install NAME_OF_YOUR_DEPENDENCY
+````
+2. Save the new dependency on requirements.txt
+````bash
+pip freeze > requirements.txt
+````
