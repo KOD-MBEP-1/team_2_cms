@@ -1,6 +1,10 @@
 # Why?
 Example project for scaffolding a python + postgresql project
 
+# Important links:
+[Repo](https://github.com/KOD-MBEP-1/team_2_cms)
+[Board](https://github.com/orgs/KOD-MBEP-1/projects/1/views/2)
+
 # System requirements:
 
 - Python 3.10.12
