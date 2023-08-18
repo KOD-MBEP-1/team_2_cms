@@ -1,8 +1,9 @@
 """
 Module with the DB Entity class, this class should be a parent class
 """
-
+import os
 import db_operations
+import utilities
 
 
 class DB_Entity:
@@ -12,15 +13,34 @@ class DB_Entity:
     of the table if not exists
     """
 
-    def __init__(self, name: str, dict_schema: dict):
-        self.name = name
+    def __init__(self, table_name: str, schema_file_name: str):
+        self.name = table_name
+        self.schema_file_name = schema_file_name
+
+        dict_schema = self.get_file_schema()
 
         constraint = dict_schema.copy()["constraint"]
 
         if isinstance(constraint, dict):
             del dict_schema["constraint"]
 
+        if isinstance(dict_schema["last_update"], str):
+            self.create_updated_at_trigger()
+
         db_operations.run_create_table(self.name, dict_schema, constraint)
+
+    def get_file_schema(self) -> dict:
+        current_path = os.path.dirname(__file__)
+        file_name = f"{self.schema_file_name}.json"
+        file_path = current_path + f"/{file_name}"
+        schema_dict = utilities.read_json_file(file_path)
+
+        dict_schema = {key: tuple(value.split(" ")) for (key, value) in schema_dict}
+
+        return dict_schema
+
+    def create_updated_at_trigger(self):
+        db_operations.create_function_timestamp(self.name)
 
     def get_all(self, col="*", order_by="*"):
         "Method to get all the entities"
