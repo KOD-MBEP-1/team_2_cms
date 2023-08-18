@@ -60,7 +60,7 @@ def run_insert(
 
     print(f"One entity created {created_entity}")
 
-    return result
+    return created_entity
 
 
 @db_utils.open_db_connection
@@ -100,4 +100,4 @@ def run_update(
 
     print(f"One entity updated {entity_updated}")
 
-    return result
+    return entity_updated
