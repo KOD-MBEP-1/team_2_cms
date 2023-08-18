@@ -2,6 +2,7 @@ from typing import Tuple
 import psycopg
 import db_utils
 import utilities
+from psycopg import sql
 
 WhereType = Tuple[str, str, str | int | float]
 
@@ -101,3 +102,36 @@ def run_update(
     print(f"One entity updated {entity_updated}")
 
     return entity_updated
+
+
+@db_utils.open_db_connection
+def run_create_table(
+    conn: psycopg.Connection,
+    curs: psycopg.Cursor,
+    table: str,
+    columns: dict[str, tuple],
+):
+    """Function to execute a CREATE TABLE IF NOT EXIST command in psql"""
+
+    filtered_entries = utilities.get_filtered_items(columns)
+
+    # Returning a list of strings. Syntax of a SET command but with named arguments
+
+    filtered_entries_list = list(
+        map(
+            lambda entry: f"{entry[0]} {' '.join(entry[1])}",
+            filtered_entries,
+        )
+    )
+
+    col_command = utilities.get_comma_string(filtered_entries_list)
+
+    query = f"CREATE TABLE IF NOT EXISTS {table} ({col_command});"
+
+    result = curs.execute(query)
+
+    conn.commit()
+
+    print(f"One table created {result}")
+
+    return result

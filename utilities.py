@@ -1,4 +1,4 @@
-ACCEPTED_PSQL_TYPES = (str, int, float, bool, dict)
+ACCEPTED_PSQL_TYPES = (str, int, float, bool, dict, tuple)
 
 
 def get_key_name_value(dict_items: list[tuple[str, str]]) -> dict:
