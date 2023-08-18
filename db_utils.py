@@ -1,3 +1,9 @@
+"""
+This module is the declaration of functions that handle the connection and cursors with the
+psql server.
+"""
+
+
 import re
 import psycopg
 from psycopg import sql
