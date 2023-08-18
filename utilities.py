@@ -13,7 +13,7 @@ def get_key_name_value(dict_items: list[tuple[str, str]]) -> dict:
 
 
 def get_string_named_argument(x: str):
-    "Function to return a list of psycopg named arguments"
+    "Function to return a list of psycopg named arguments as '$(x)s'"
     return f"%({x})s"
 
 
@@ -24,8 +24,7 @@ def get_named_arguments(some_iter: iter) -> list[str]:
 
 def get_comma_string(some_iterable: iter) -> str:
     """
-    Function returning a tuple with two dictionaries, one with the names of the
-    keys and other with key, value
+    Function returning a string with a comma separated items from an iterable
     """
 
     return ", ".join(some_iterable)
@@ -46,7 +45,7 @@ def get_entity_key_name_tuple(dict_entity: dict) -> tuple[dict, dict]:
 
 
 def get_filtered_items(some_dict: dict) -> list[tuple[str, str]]:
-    """Function returning a list of filtered entities"""
+    """Function returning a list of filtered entities, cleaning the values of a dict"""
 
     dict_items = some_dict.items()
     # This types are arbitrary. Representing the types accepted in postgresql fields
