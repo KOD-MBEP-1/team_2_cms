@@ -109,6 +109,31 @@ def run_update(
 
 
 @db_utils.open_db_connection
+def create_function_timestamp(
+    conn: psycopg.Connection, curs: psycopg.Cursor, table: str
+):
+    function_query = """
+    CREATE OR REPLACE FUNCTION trigger_set_timestamp()
+    RETURNS TRIGGER AS $$
+    BEGIN
+      NEW.updated_at = NOW();
+      RETURN NEW;
+    END;
+    """
+
+    curs.execute(function_query)
+
+    trigger_query = f"""
+      CREATE TRIGGER set_timestamp_{table}
+      BEFORE UPDATE ON {table}
+      FOR EACH ROW
+      EXECUTE PROCEDURE trigger_set_timestamp();
+    """
+
+    curs.execute(trigger_query)
+
+
+@db_utils.open_db_connection
 def run_create_table(
     conn: psycopg.Connection,
     curs: psycopg.Cursor,

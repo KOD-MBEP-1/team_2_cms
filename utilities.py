@@ -1,3 +1,5 @@
+import json
+
 ACCEPTED_PSQL_TYPES = (str, int, float, bool, dict, tuple)
 
 
@@ -71,3 +73,29 @@ def get_where_command(where: tuple[str]) -> str:
         and all(isinstance(where_item, ACCEPTED_PSQL_TYPES) for where_item in where)
         else "WHERE false"
     )
+
+
+def get_is_file_exist(file_path):
+    is_file_exists = os.path.exists(file_path)
+
+    if is_file_exists:
+        return True
+    else:
+        raise FileNotFoundError
+
+
+def read_json_file(file_path):
+    try:
+        get_is_file_exist(file_path)
+
+        with open(file_path) as file:
+            file_stream = file.read()
+            file_content_json = json.loads(file_stream)
+
+            return file_content_json
+
+    except FileNotFoundError as error:
+        raise IOError(f"File with path {file_path} doesn't exist") from error
+
+    except PermissionError as error:
+        raise IOError(f"You don't have permissions to delete this file") from error
