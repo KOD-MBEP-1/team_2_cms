@@ -1,8 +1,12 @@
+"""
+This module is the declaration of functions interacting and executing commands 
+into the database
+"""
+
 from typing import Tuple
 import psycopg
 import db_utils
 import utilities
-from psycopg import sql
 
 WhereType = Tuple[str, str, str | int | float]
 
@@ -110,6 +114,7 @@ def run_create_table(
     curs: psycopg.Cursor,
     table: str,
     columns: dict[str, tuple],
+    constraint: dict,
 ):
     """Function to execute a CREATE TABLE IF NOT EXIST command in psql"""
 
@@ -126,7 +131,17 @@ def run_create_table(
 
     col_command = utilities.get_comma_string(filtered_entries_list)
 
-    query = f"CREATE TABLE IF NOT EXISTS {table} ({col_command});"
+    constraint_string = (
+        f"""
+        , CONSTAINT {constraint['name']}
+          FOREIGN KEY({constraint['col_name']})
+            REFERENCES {constraint['table_name'] ({constraint['foreign_col_name']})}
+        """
+        if isinstance(constraint, dict)
+        else ""
+    )
+
+    query = f"CREATE TABLE IF NOT EXISTS {table} ({col_command}{constraint_string});"
 
     result = curs.execute(query)
 
