@@ -36,8 +36,10 @@ class DB_Entity:
         file_path = current_path + f"/{file_name}"
         schema_dict: dict = utilities.read_json_file(file_path)
         schema_entries = schema_dict.items()
-        dict_schema = {key: tuple(value.split(" ")) for (key, value) in schema_entries}
-        print(dict_schema)
+        dict_schema = {
+            key: tuple(value.split(" ")) if isinstance(value, str) else value
+            for (key, value) in schema_entries
+        }
 
         return dict_schema
 

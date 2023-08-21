@@ -217,6 +217,8 @@ def run_create_table(
         else ""
     )
 
+    print(constraint_string)
+
     query = f"CREATE TABLE IF NOT EXISTS {table} ({col_command}{constraint_string});"
 
     result = curs.execute(query)
