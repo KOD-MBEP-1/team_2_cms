@@ -67,7 +67,7 @@ def run_select_with_join(
     order_by_command = f"ORDER BY {order_by}" if isinstance(order_by, str) else ""
 
     curs.execute(
-        f"SELECT {columns_string} FROM {table}{join_command}  {where_command} {order_by_command};"
+        f"SELECT {columns_string} FROM {table}{join_command} {where_command} {order_by_command};"
     )
 
     result = curs.fetchall() if get_all is True else curs.fetchone()
