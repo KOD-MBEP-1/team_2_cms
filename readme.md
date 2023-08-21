@@ -34,6 +34,8 @@ source ./.venv/bin/activate
 pip install -r requirements.txt
 ````
 
+5. Create a .env file from `.env.example` syntax
+
 5. Init your psql server
    
 6. Code like your life depends on it
