@@ -19,24 +19,25 @@ class DB_Entity:
 
         dict_schema = self.get_file_schema()
 
-        constraint = dict_schema.copy()["constraint"]
+        constraint = dict_schema["constraint"] if "constraint" in dict_schema else None
 
         if isinstance(constraint, dict):
             del dict_schema["constraint"]
 
-        if isinstance(dict_schema["last_update"], str):
-            self.create_updated_at_trigger()
-
         db_operations.run_create_table(self.name, dict_schema, constraint)
+
+        if "last_update" in dict_schema:
+            self.create_updated_at_trigger()
 
     def get_file_schema(self) -> dict:
         "Get json schema by file name"
         current_path = os.path.dirname(__file__)
         file_name = f"{self.schema_file_name}.json"
         file_path = current_path + f"/{file_name}"
-        schema_dict = utilities.read_json_file(file_path)
-
-        dict_schema = {key: tuple(value.split(" ")) for (key, value) in schema_dict}
+        schema_dict: dict = utilities.read_json_file(file_path)
+        schema_entries = schema_dict.items()
+        dict_schema = {key: tuple(value.split(" ")) for (key, value) in schema_entries}
+        print(dict_schema)
 
         return dict_schema
 
@@ -73,7 +74,7 @@ class DB_Entity:
         db_operations.run_update(
             self.name,
             entity,
-            (id_name, "IS", id),
+            (id_name, "=", id),
         )
 
     def create_item(self, entity, return_columns="*"):
