@@ -39,6 +39,7 @@ def run_select(
 
 
 @db_utils.open_db_connection
+
 def run_select_with_join(
     conn: psycopg.Connection,
     curs: psycopg.Cursor,
@@ -120,12 +121,21 @@ def run_update(
     # Returning a list of strings. Syntax of a SET command but with named arguments
 
     filtered_entries_list = map(
+        lambda entry: f"{entry[0]} = {utilities.get_string_named_argument(entry[0])}",
         lambda entry: f"{entry[0]} = {{}}",
         filtered_entries,
     )
 
     set_command = utilities.get_comma_string(filtered_entries_list)
 
+    where_command = utilities.get_where_command(where)
+
+    named_arg_values = {key: val for (key, val) in filtered_entries}
+
+    query = f"UPDATE {table} SET {set_command} {where_command} RETURNING {return_cols};"
+
+    print(query)
+    result = curs.execute(query, named_arg_values)
     placeholder_values = [sql.Identifier(entry[1]) for entry in filtered_entries]
 
     where_command = utilities.get_where_command(where)
@@ -161,6 +171,9 @@ def create_function_timestamp(
     CREATE OR REPLACE FUNCTION trigger_set_timestamp()
     RETURNS TRIGGER AS $$
     BEGIN
+      NEW.updated_at = NOW();
+      RETURN NEW;
+    END;
       NEW.last_update = NOW();
       RETURN NEW;
     END;
@@ -203,6 +216,12 @@ def run_create_table(
     col_command = utilities.get_comma_string(filtered_entries_list)
 
     constraint_string = (
+        f"""
+        , CONSTAINT {constraint['name']}
+          FOREIGN KEY({constraint['col_name']})
+            REFERENCES {constraint['table_name'] ({constraint['foreign_col_name']})}
+        """
+        if isinstance(constraint, dict)
         utilities.get_constaint_string(constraint)
         if isinstance(constraint, dict)
         else ", ".join(

@@ -1,4 +1,11 @@
 {
+  "articles_id": "",
+  "author_id": "",
+  "category_id": "",
+  "title": "",
+  "content": "",
+  "publish_date": "",
+  "last_update": "",
   "articles_id": "SERIAL NOT NULL PRIMARY KEY",
   "author_id": "INT NOT NULL",
   "category_id": "INT NOT NULL",
