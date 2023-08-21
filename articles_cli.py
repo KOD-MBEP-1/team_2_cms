@@ -51,6 +51,12 @@ CATEGORY_ACTIONS = [
     help="Flag to define article state: is_active ",
 )
 @click.option(
+    "--publish_date",
+    type=click.DateTime(formats=["%Y-%m-%d"]),
+    prompt=False,
+    help="Type the publish_date of the article with the format: YYYY-MM-DD",
+)
+@click.option(
     "--article_id",
     prompt=False,
     help="Type the article_id you want to refer to",
@@ -77,13 +83,24 @@ def article(ctx, action, **kwargs):
 
 
 @click.command()
-def create_article(author_id, category_id, title, content, is_active=False, **kwargs):
-    CURRENT_INSTANCE.create(author_id, category_id, title, content, is_active)
+def create_article(
+    author_id, category_id, title, content, is_active, publish_date, **kwargs
+):
+    CURRENT_INSTANCE.create(
+        author_id, category_id, title, content, is_active, publish_date
+    )
 
 
 @click.command()
 def update_article(
-    author_id, category_id, title, content, is_active, article_id, **kwargs
+    author_id,
+    category_id,
+    title,
+    content,
+    publish_date,
+    is_active,
+    article_id,
+    **kwargs,
 ):
     CURRENT_INSTANCE.update(
         author_id,
@@ -91,6 +108,7 @@ def update_article(
         title,
         content,
         is_active,
+        publish_date,
         article_id,
     )
 

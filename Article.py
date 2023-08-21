@@ -5,7 +5,7 @@ class Article(DB_Entity):
     def __init__(self):
         super().__init__("article", "articles")
 
-    def create(self, author_id, category_id, title, content, is_active=True):
+    def create(self, author_id, category_id, title, content, is_active, publish_date):
         "Create article"
         self.create_item(
             {
@@ -13,11 +13,21 @@ class Article(DB_Entity):
                 "category_id": category_id,
                 "title": title,
                 "content": content,
-                "is_active": is_active,
+                "is_active": "true",
+                "publish_date": publish_date,
             }
         )
 
-    def update(self, author_id, category_id, title, content, is_active, article_id):
+    def update(
+        self,
+        author_id,
+        category_id,
+        title,
+        content,
+        is_active,
+        publish_date,
+        article_id,
+    ):
         "update article"
         self.update_item(
             {
@@ -26,6 +36,7 @@ class Article(DB_Entity):
                 "title": title,
                 "content": content,
                 "is_active": is_active,
+                "publish_date": publish_date,
             },
             article_id,
         )
@@ -49,7 +60,7 @@ class Article(DB_Entity):
         "Deactivate one article by id"
         self.update_item(
             {
-                "is_active": False,
+                "is_active": "false",
             },
             article_id,
         )

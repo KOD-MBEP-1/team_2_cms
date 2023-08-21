@@ -207,7 +207,7 @@ def run_create_table(
     constraint_string = (
         utilities.get_constaint_string(constraint)
         if isinstance(constraint, dict)
-        else ", ".join(
+        else " ".join(
             [
                 utilities.get_constaint_string(constraint_item)
                 for constraint_item in constraint
@@ -217,10 +217,9 @@ def run_create_table(
         else ""
     )
 
-    print(constraint_string)
-
     query = f"CREATE TABLE IF NOT EXISTS {table} ({col_command}{constraint_string});"
 
+    print(query)
     result = curs.execute(query)
 
     conn.commit()
