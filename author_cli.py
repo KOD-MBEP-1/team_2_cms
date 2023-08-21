@@ -23,23 +23,23 @@ AUTHOR_ACTIONS = ["create", "get_all", "update", "get_one", "get_articles"]
 @click.option(
     "--name",
     prompt=False,
-    help="Select an action to perform on Author table",
+    help="Type the name of the author",
 )
 @click.option(
     "--last_name",
     prompt=False,
-    help="Type the last name of your new author",
+    help="Type the last name of the author",
 )
 @click.option(
     "--email",
     prompt=False,
-    help="Type the email of your new author",
+    help="Type the email of the author",
 )
 @click.option(
     "--birthdate",
     type=click.DateTime(formats=["%Y-%m-%d"]),
     prompt=False,
-    help="Type the birthdate of your new author with the format: YYYY-MM-DD",
+    help="Type the birthdate of the author with the format: YYYY-MM-DD",
 )
 @click.option(
     "--author_id",

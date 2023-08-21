@@ -26,29 +26,29 @@ CATEGORY_ACTIONS = [
 @click.option(
     "--author_id",
     prompt=False,
-    help="Type the name of your category",
+    help="Type the author id of your article",
 )
 @click.option(
     "--category_id",
     prompt=False,
-    help="Type the description of your category",
+    help="Type the category_id of your article",
 )
 @click.option(
     "--title",
     prompt=False,
-    help="Type the category_id you want to refer to",
+    help="Type the title of your article",
 )
 @click.option(
     "--content",
     prompt=False,
-    help="Type the category_id you want to refer to",
+    help="Type the content of your article",
 )
 @click.option(
     "--is_active",
     default=True,
     is_flag=True,
     prompt=False,
-    help="Option to define article is_active state",
+    help="Flag to define article state: is_active ",
 )
 @click.option(
     "--article_id",
