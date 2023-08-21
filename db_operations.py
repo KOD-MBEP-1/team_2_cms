@@ -5,6 +5,7 @@ into the database
 
 from typing import Tuple
 import psycopg
+from psycopg import sql
 import db_utils
 import utilities
 
@@ -30,6 +31,42 @@ def run_select(
 
     curs.execute(
         f"SELECT {columns_string} FROM {table} {where_command} {order_by_command};"
+    )
+
+    result = curs.fetchall() if get_all is True else curs.fetchone()
+
+    return result
+
+
+@db_utils.open_db_connection
+
+def run_select_with_join(
+    conn: psycopg.Connection,
+    curs: psycopg.Cursor,
+    table: str,
+    col: str,
+    where: WhereType,
+    order_by: str,
+    join=None,
+    get_all: bool = False,
+):
+    """Function to execute a SELECT command"""
+    columns_string = ", ".join(col) if isinstance(col, tuple) else col
+
+    join_command = (
+        utilities.get_join_string(join)
+        if isinstance(join, dict)
+        else ", ".join([utilities.get_join_string(join_item) for join_item in join])
+        if isinstance(join, list)
+        else " "
+    )
+
+    where_command = utilities.get_where_command(where)
+
+    order_by_command = f"ORDER BY {order_by}" if isinstance(order_by, str) else ""
+
+    curs.execute(
+        f"SELECT {columns_string} FROM {table}{join_command}  {where_command} {order_by_command};"
     )
 
     result = curs.fetchall() if get_all is True else curs.fetchone()
@@ -85,6 +122,7 @@ def run_update(
 
     filtered_entries_list = map(
         lambda entry: f"{entry[0]} = {utilities.get_string_named_argument(entry[0])}",
+        lambda entry: f"{entry[0]} = {{}}",
         filtered_entries,
     )
 
@@ -98,6 +136,23 @@ def run_update(
 
     print(query)
     result = curs.execute(query, named_arg_values)
+    placeholder_values = [sql.Identifier(entry[1]) for entry in filtered_entries]
+
+    where_command = utilities.get_where_command(where)
+
+    query = (
+        sql.SQL(
+            f"UPDATE {table} SET {set_command} {where_command} RETURNING {return_cols};"
+        )
+        .format(*placeholder_values)
+        .as_string(conn)
+        .replace('"', "'")
+    )
+
+    print(query)
+    result = curs.execute(
+        query,
+    )
 
     entity_updated = result.fetchone()
 
@@ -119,6 +174,10 @@ def create_function_timestamp(
       NEW.updated_at = NOW();
       RETURN NEW;
     END;
+      NEW.last_update = NOW();
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
     """
 
     curs.execute(function_query)
@@ -163,6 +222,15 @@ def run_create_table(
             REFERENCES {constraint['table_name'] ({constraint['foreign_col_name']})}
         """
         if isinstance(constraint, dict)
+        utilities.get_constaint_string(constraint)
+        if isinstance(constraint, dict)
+        else ", ".join(
+            [
+                utilities.get_constaint_string(constraint_item)
+                for constraint_item in constraint
+            ]
+        )
+        if isinstance(constraint, (list, tuple))
         else ""
     )
 

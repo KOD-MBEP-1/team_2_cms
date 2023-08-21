@@ -1,3 +1,7 @@
+
+"Utility functions"
+
+import os
 import json
 
 ACCEPTED_PSQL_TYPES = (str, int, float, bool, dict, tuple)
@@ -99,3 +103,17 @@ def read_json_file(file_path):
 
     except PermissionError as error:
         raise IOError(f"You don't have permissions to delete this file") from error
+
+
+def get_constaint_string(constraint_dict: dict):
+    return f"""
+        , CONSTAINT {constraint_dict['name']}
+          FOREIGN KEY({constraint_dict['col_name']})
+            REFERENCES {constraint_dict['table_name'] ({constraint_dict['foreign_col_name']})} ON DELETE CASCADE
+        """
+
+
+def get_join_string(join_command: dict):
+    return f"""
+            {join_command['type']} {join_command['table_name']} AS {join_command['alias']} ON {join_command['alias']}.{join_command['fk']} = {join_command['pk']} 
+        """
