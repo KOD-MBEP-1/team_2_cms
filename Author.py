@@ -43,3 +43,16 @@ class Author(DB_Entity):
                 "pk": "author_id",
             },
         )
+
+    def get_articles_by_author_id(self, author_id):
+        self.get_items_with_join(
+            "*",
+            ("author_id", "=", author_id),
+            {
+                "type": "LEFT JOIN",
+                "table_name": "articles",
+                "alias": "a",
+                "fk": "article_id",
+                "pk": "author_id",
+            },
+        )

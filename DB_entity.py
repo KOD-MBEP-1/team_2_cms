@@ -45,9 +45,11 @@ class DB_Entity:
         "Create a trigger for update_at timestamp"
         db_operations.create_function_timestamp(self.name)
 
-    def get_all(self, col="*", order_by="*"):
+    def get_all(self, col="*"):
         "Method to get all the entities"
-        db_operations.run_select(self.name, col, True, order_by, True)
+        return db_operations.run_select(
+            self.name, col, ("true", "is", "true"), f"{self.name}_id", True
+        )
 
     def get_items_by_column(self, col="*", filter: tuple = (True,), order_by="*"):
         "Get multiple items by column name"
