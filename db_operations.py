@@ -38,6 +38,41 @@ def run_select(
 
 
 @db_utils.open_db_connection
+def run_select_with_join(
+    conn: psycopg.Connection,
+    curs: psycopg.Cursor,
+    table: str,
+    col: str,
+    where: WhereType,
+    order_by: str,
+    join=None,
+    get_all: bool = False,
+):
+    """Function to execute a SELECT command"""
+    columns_string = ", ".join(col) if isinstance(col, tuple) else col
+
+    join_command = (
+        utilities.get_join_string(join)
+        if isinstance(join, dict)
+        else ", ".join([utilities.get_join_string(join_item) for join_item in join])
+        if isinstance(join, list)
+        else " "
+    )
+
+    where_command = utilities.get_where_command(where)
+
+    order_by_command = f"ORDER BY {order_by}" if isinstance(order_by, str) else ""
+
+    curs.execute(
+        f"SELECT {columns_string} FROM {table}{join_command}  {where_command} {order_by_command};"
+    )
+
+    result = curs.fetchall() if get_all is True else curs.fetchone()
+
+    return result
+
+
+@db_utils.open_db_connection
 def run_insert(
     conn: psycopg.Connection,
     curs: psycopg.Cursor,
@@ -157,12 +192,15 @@ def run_create_table(
     col_command = utilities.get_comma_string(filtered_entries_list)
 
     constraint_string = (
-        f"""
-        , CONSTAINT {constraint['name']}
-          FOREIGN KEY({constraint['col_name']})
-            REFERENCES {constraint['table_name'] ({constraint['foreign_col_name']})}
-        """
+        utilities.get_constaint_string(constraint)
         if isinstance(constraint, dict)
+        else ", ".join(
+            [
+                utilities.get_constaint_string(constraint_item)
+                for constraint_item in constraint
+            ]
+        )
+        if isinstance(constraint, (list, tuple))
         else ""
     )
 

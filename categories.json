@@ -1,7 +1,7 @@
 {
-  "category_id": "",
-  "name": "",
-  "description": "",
-  "email": "",
-  "last_update": ""
+  "category_id": "SERIAL PRIMARY KEY",
+  "name": "VARCHAR(25) NOT NULL",
+  "description": "VARCHAR(250) NOT NULL",
+  "publish_date": "DATE DEFAULT NOW()",
+  "last_update": "DATE DEFAULT NOW()"
 }
