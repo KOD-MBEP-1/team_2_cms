@@ -30,6 +30,7 @@ class DB_Entity:
         db_operations.run_create_table(self.name, dict_schema, constraint)
 
     def get_file_schema(self) -> dict:
+        "Get json schema by file name"
         current_path = os.path.dirname(__file__)
         file_name = f"{self.schema_file_name}.json"
         file_path = current_path + f"/{file_name}"
@@ -40,23 +41,34 @@ class DB_Entity:
         return dict_schema
 
     def create_updated_at_trigger(self):
+        "Create a trigger for update_at timestamp"
         db_operations.create_function_timestamp(self.name)
 
     def get_all(self, col="*", order_by="*"):
         "Method to get all the entities"
         db_operations.run_select(self.name, col, True, order_by, True)
 
-    def get_items_by_column(self, col="*", filter: tuple = (True), order_by="*"):
+    def get_items_by_column(self, col="*", filter: tuple = (True,), order_by="*"):
+        "Get multiple items by column name"
         db_operations.run_select(self.name, col, filter, order_by, True)
 
-    def get_item_by_column(self, col="*", filter: tuple = (True), order_by="*"):
+    def get_item_by_column(self, col="*", filter: tuple = (True,), order_by="*"):
+        "Get one items by column"
         db_operations.run_select(self.name, col, filter, order_by, False)
 
+    def get_items_with_join(
+        self, col="*", filter: tuple = (True), join=None, order_by="*"
+    ):
+        "Get multiple items with join statement"
+        db_operations.run_select_with_join(self.name, col, filter, order_by, join, True)
+
     def get_item_by_id(self, id):
+        "Get one item by id"
         id_name = f"{self.name}_id"
         db_operations.run_select(self.name, "*", (id_name, "IS", id), id_name, False)
 
     def update_item(self, entity, id):
+        "Update one item by id"
         id_name = f"{self.name}_id"
         db_operations.run_update(
             self.name,
@@ -65,4 +77,5 @@ class DB_Entity:
         )
 
     def create_item(self, entity, return_columns="*"):
+        "Create entity"
         db_operations.run_insert(self.name, entity, return_columns)
