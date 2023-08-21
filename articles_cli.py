@@ -77,9 +77,9 @@ def article(ctx, action, **kwargs):
         case "get_all":
             ctx.invoke(get_all_articles)
         case "get_author_articles":
-            ctx.invoke(get_author_articles)
+            ctx.invoke(get_author_articles, **kwargs)
         case "get_category_articles":
-            ctx.invoke(get_category_articles)
+            ctx.invoke(get_category_articles, **kwargs)
 
 
 @click.command()

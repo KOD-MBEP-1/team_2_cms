@@ -77,6 +77,7 @@ class Article(DB_Entity):
                 "fk": f"{table_name}_id",
                 "pk": "article_id",
             },
+            "article_id",
         )
 
     def get_articles_by_one_foreign_key(self, table_name: str, foreign_key_id: str):
@@ -91,4 +92,5 @@ class Article(DB_Entity):
                 "fk": f"{table_name}_id",
                 "pk": "article_id",
             },
+            "article_id",
         )

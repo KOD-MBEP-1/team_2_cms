@@ -72,6 +72,8 @@ def run_select_with_join(
 
     result = curs.fetchall() if get_all is True else curs.fetchone()
 
+    print(result)
+
     return result
 
 
