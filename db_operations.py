@@ -129,8 +129,8 @@ def run_update(
     set_command = utilities.get_comma_string(filtered_entries_list)
 
     placeholder_values = [sql.Identifier(entry[1]) for entry in filtered_entries]
-
     where_command = utilities.get_where_command(where)
+    print(where, where_command)
 
     query = (
         sql.SQL(

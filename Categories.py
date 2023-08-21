@@ -15,8 +15,11 @@ class Category(DB_Entity):
 
     def update(self, category_id, name, description):
         "Update category by id"
-        if not isinstance(name, str) or not isinstance(description, str):
+        if not isinstance(name, str) and isinstance(description, str):
             raise TypeError("You need to provide a name or description")
+
+        if not isinstance(category_id, (str, int)):
+            raise TypeError("You need to provide a category_id")
 
         self.update_item(
             {
