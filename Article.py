@@ -1,7 +1,7 @@
 from DB_entity import DB_Entity
 
 
-class Category(DB_Entity):
+class Article(DB_Entity):
     def __init__(self):
         super().__init__("article", "articles")
 
@@ -58,7 +58,21 @@ class Category(DB_Entity):
         "Get articles"
         self.get_items_with_join(
             "*",
-            True,
+            ("true", "is", "true"),
+            {
+                "type": "RIGHT JOIN",
+                "table_name": table_name,
+                "alias": f"{table_name[0]}{table_name[1]}",
+                "fk": f"{table_name}_id",
+                "pk": "article_id",
+            },
+        )
+
+    def get_articles_by_one_foreign_key(self, table_name: str, foreign_key_id: str):
+        "Get articles"
+        self.get_items_with_join(
+            "*",
+            (f"{table_name[0]}{table_name[1]}.{table_name}_id", "=", foreign_key_id),
             {
                 "type": "RIGHT JOIN",
                 "table_name": table_name,

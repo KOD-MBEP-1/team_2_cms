@@ -34,10 +34,10 @@ class Category(DB_Entity):
             category_id,
         )
 
-    def get_articles(self):
+    def get_articles_by_category_id(self, category_id):
         self.get_items_with_join(
             "*",
-            True,
+            ("a.article_id", "=", category_id),
             {
                 "type": "LEFT JOIN",
                 "table_name": "articles",

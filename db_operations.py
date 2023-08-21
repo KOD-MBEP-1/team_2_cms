@@ -35,6 +35,8 @@ def run_select(
 
     result = curs.fetchall() if get_all is True else curs.fetchone()
 
+    print(result)
+
     return result
 
 
