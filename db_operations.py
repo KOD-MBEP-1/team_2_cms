@@ -5,6 +5,7 @@ into the database
 
 from typing import Tuple
 import psycopg
+from psycopg import sql
 import db_utils
 import utilities
 
@@ -119,20 +120,29 @@ def run_update(
     # Returning a list of strings. Syntax of a SET command but with named arguments
 
     filtered_entries_list = map(
-        lambda entry: f"{entry[0]} = {utilities.get_string_named_argument(entry[0])}",
+        lambda entry: f"{entry[0]} = {{}}",
         filtered_entries,
     )
 
     set_command = utilities.get_comma_string(filtered_entries_list)
 
+    placeholder_values = [sql.Identifier(entry[1]) for entry in filtered_entries]
+
     where_command = utilities.get_where_command(where)
 
-    named_arg_values = {key: val for (key, val) in filtered_entries}
-
-    query = f"UPDATE {table} SET {set_command} {where_command} RETURNING {return_cols};"
+    query = (
+        sql.SQL(
+            f"UPDATE {table} SET {set_command} {where_command} RETURNING {return_cols};"
+        )
+        .format(*placeholder_values)
+        .as_string(conn)
+        .replace('"', "'")
+    )
 
     print(query)
-    result = curs.execute(query, named_arg_values)
+    result = curs.execute(
+        query,
+    )
 
     entity_updated = result.fetchone()
 
@@ -151,9 +161,10 @@ def create_function_timestamp(
     CREATE OR REPLACE FUNCTION trigger_set_timestamp()
     RETURNS TRIGGER AS $$
     BEGIN
-      NEW.updated_at = NOW();
+      NEW.last_update = NOW();
       RETURN NEW;
     END;
+    $$ LANGUAGE plpgsql;
     """
 
     curs.execute(function_query)
