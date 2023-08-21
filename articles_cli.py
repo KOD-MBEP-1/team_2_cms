@@ -55,16 +55,6 @@ CATEGORY_ACTIONS = [
     prompt=False,
     help="Type the article_id you want to refer to",
 )
-@click.option(
-    "--category_id",
-    prompt=False,
-    help="Type the category_id where you want to get the articles from",
-)
-@click.option(
-    "--author_id",
-    prompt=False,
-    help="Type the author_id where you want to get the articles from",
-)
 @click.pass_context
 def article(ctx, action, **kwargs):
     global CURRENT_INSTANCE

@@ -107,9 +107,9 @@ def read_json_file(file_path):
 
 def get_constaint_string(constraint_dict: dict):
     return f"""
-        , CONSTAINT {constraint_dict['name']}
-          FOREIGN KEY({constraint_dict['col_name']})
-            REFERENCES {constraint_dict['table_name'] ({constraint_dict['foreign_col_name']})} ON DELETE CASCADE
+        CONSTRAINT {constraint_dict['name']}
+            FOREIGN KEY({constraint_dict['col_name']})
+                REFERENCES {constraint_dict['table_name']} ({constraint_dict['foreign_col_name']}) ON DELETE CASCADE
         """
 
 
