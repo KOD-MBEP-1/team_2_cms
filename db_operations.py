@@ -139,8 +139,8 @@ def run_update(
     print(query)
     result = curs.execute(query, named_arg_values)
     placeholder_values = [sql.Identifier(entry[1]) for entry in filtered_entries]
-
     where_command = utilities.get_where_command(where)
+    print(where, where_command)
 
     query = (
         sql.SQL(
