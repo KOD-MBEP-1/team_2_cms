@@ -1,9 +1,24 @@
 {
-  "articles_id": "",
-  "author_id": "",
-  "category_id": "",
-  "title": "",
-  "content": "",
-  "publish_date": "",
-  "last_update": ""
+  "articles_id": "SERIAL NOT NULL PRIMARY KEY",
+  "author_id": "INT NOT NULL",
+  "category_id": "INT NOT NULL",
+  "title": "VARCHAR(50) NOT NULL",
+  "content": "TEXT",
+  "is_active": "BOOLEAN DEFAULT false",
+  "publish_date": "DATE NOT NULL",
+  "last_update": "DATE DEFAULT NOW()",
+  "constraint": [
+    {
+      "name": "fk_author",
+      "col_name": "author_id",
+      "table_name": "authors",
+      "foreign_col_name": "author_id"
+    },
+    {
+      "name": "fk_category",
+      "col_name": "category_id",
+      "table_name": "category",
+      "foreign_col_name": "category_id"
+    }
+  ]
 }
