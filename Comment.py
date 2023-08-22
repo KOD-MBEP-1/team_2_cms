@@ -1,40 +1,44 @@
 from DB_entity import DB_Entity
 
 
-class Comment(DB_Entity):
+class Author(DB_Entity):
     def __init__(self):
-        super().__init__("comment", "comments")
+        super().__init__("author", "authors")
 
-    def create(self,content,):
-        self.create_item(
+    def create(self, author_id, article_id, content ):
+        self.create_item( 
             {
-                "content": content
+                    "author_id": author_id,
+                    "articles_id": article_id,
+                    "content": content,
             }
         )
 
-    def update(self, comment_id, content):
+    def update(self, author_id, article_id, content,comment_id):
         self.update_item(
             {
-                "name": content
+                "author_id": author_id,
+                    "articles_id": article_id,
+                    "content": content,
             },
             comment_id,
         )
 
-    def get_one(self, comment_id):
+    def get_one(self, author_id):
         self.get_item_by_id(
-            comment_id,
+            author_id,
         )
 
-    def get_comments_by_articles_id(self, article_id):
+    def get_articles(self):
         self.get_items_with_join(
             "*",
-            ("a.article_id", "=", ),
+            True,
             {
                 "type": "LEFT JOIN",
-                "table_name": "comments",
-                "alias": "c",
+                "table_name": "articles",
+                "alias": "a",
                 "fk": "article_id",
-                "pk": "comment_id",
+                "pk": "author_id",
             },
         )
 
