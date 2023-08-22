@@ -1,17 +1,17 @@
 {
-  "articles_id": "SERIAL NOT NULL PRIMARY KEY",
+  "article_id": "SERIAL NOT NULL PRIMARY KEY",
   "author_id": "INT NOT NULL",
   "category_id": "INT NOT NULL",
   "title": "VARCHAR(50) NOT NULL",
   "content": "TEXT",
   "is_active": "BOOLEAN DEFAULT false",
-  "publish_date": "DATE NOT NULL",
+  "publish_date": "DATE NOT NULL DEFAULT NOW()",
   "last_update": "DATE DEFAULT NOW()",
   "constraint": [
     {
       "name": "fk_author",
       "col_name": "author_id",
-      "table_name": "authors",
+      "table_name": "author",
       "foreign_col_name": "author_id"
     },
     {
