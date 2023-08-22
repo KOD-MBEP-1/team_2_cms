@@ -1,0 +1,22 @@
+{
+  "comment_id": "SERIAL PRIMARY KEY",
+  "author_id": "VARCHAR(25) NOT NULL",
+  "articles_id": "VARCHAR(250) NOT NULL",
+  "content": "TEXT",
+  "publish_date": "DATE DEFAULT NOW()",
+  "last_update": "DATE DEFAULT NOW()",
+  "constraint": [
+    {
+      "name": "fk_author",
+      "col_name": "author_id",
+      "table_name": "authors",
+      "foreign_col_name": "author_id"
+    },
+    {
+      "name": "fk_articles",
+      "col_name": "articles_id",
+      "table_name": "articles",
+      "foreign_col_name": "articles_id"
+    }
+  ]
+}
