@@ -49,7 +49,7 @@ def create_database() -> list[psycopg.Connection, psycopg.Cursor]:
     # Same as str.format() but safer for sql commands
 
     try:
-        query = sql.SQL("CREATE DATABASE {DB_NAME} WITH OWNER {DB_USER};").format(
+        query = sql.SQL("CREATE DATABASE {db_name} WITH OWNER {db_owner};").format(
             db_name=sql.Identifier(DB_NAME), db_owner=sql.Identifier(DB_USER)
         )
 
